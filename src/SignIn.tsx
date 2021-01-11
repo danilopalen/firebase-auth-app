@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -13,6 +13,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import fb from "./firebase";
+import firebase from "firebase";
 
 function Copyright() {
   return (
@@ -60,10 +61,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function SignIn({
+  setUser,
+}: {
+  setUser: (user: firebase.User | null) => void;
+}) {
+  const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const classes = useStyles();
+
+  useEffect(() => {
+    fb.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        const uid = user.uid;
+        // ...
+      } else {
+        // User is signed out
+        // ...
+      }
+    });
+  }, []);
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -118,8 +138,10 @@ export default function SignIn() {
                 fb.auth()
                   .createUserWithEmailAndPassword(email, password)
                   .catch((error: any) => {
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    console.log("errorCode", errorCode);
+                    console.log("errorMessage", errorMessage);
                     // ..
                   });
               }}
