@@ -12,7 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
-import fb from "./firebase";
+import fb from "../firebase";
 import firebase from "firebase";
 
 function Copyright() {
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn({
+export default function SignUp({
   setUser,
 }: {
   setUser: (user: firebase.User | null) => void;
@@ -156,7 +156,7 @@ export default function SignIn({
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
+                  {"Have an account? Sign In"}
                 </Link>
               </Grid>
             </Grid>
