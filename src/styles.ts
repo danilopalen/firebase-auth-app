@@ -39,4 +39,10 @@ export const useStyles = makeStyles((theme) => ({
     textDecoration: "none",
     color: "#fff",
   },
+  centered: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "500px",
+  },
 }));

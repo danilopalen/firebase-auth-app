@@ -30,18 +30,31 @@ function App() {
           <AppBar position="static">
             <Toolbar variant="dense">
               <Typography variant="h6" style={{ flexGrow: 1 }}>
-                Firebase Authentication
+                <Link to="/" className={classes.navLink}>
+                  Firebase Authentication
+                </Link>
               </Typography>
-              <Button style={{ marginRight: "10px" }}>
-                <Link to="/SignUp" className={classes.navLink}>
-                  Sign Up
-                </Link>
-              </Button>
-              <Button>
-                <Link to="/SignIn" className={classes.navLink}>
-                  Sign In
-                </Link>
-              </Button>
+              {user ? (
+                <Button
+                  className={classes.navLink}
+                  onClick={() => fb.auth().signOut()}
+                >
+                  Sign Out
+                </Button>
+              ) : (
+                <>
+                  <Button style={{ marginRight: "10px" }}>
+                    <Link to="/SignUp" className={classes.navLink}>
+                      Sign Up
+                    </Link>
+                  </Button>
+                  <Button>
+                    <Link to="/SignIn" className={classes.navLink}>
+                      Sign In
+                    </Link>
+                  </Button>
+                </>
+              )}
             </Toolbar>
           </AppBar>
         </div>
@@ -50,8 +63,8 @@ function App() {
           <Route exact path="/">
             {user ? <Home /> : <SignIn />}
           </Route>
-          <Route path="/SignUp" component={SignUp} />
-          <Route path="/SignIn" component={SignIn} />
+          <Route path="/SignUp">{user ? <Home /> : <SignUp />}</Route>
+          <Route path="/SignIn">{user ? <Home /> : <SignIn />}</Route>
         </Switch>
       </div>
     </Router>

@@ -1,11 +1,14 @@
+import { Typography } from "@material-ui/core";
 import React from "react";
-import fb from "../firebase";
+import { useStyles } from "../styles";
 
 export default function Home() {
+  const classes = useStyles();
   return (
-    <>
-      <h1>Home</h1>
-      <button onClick={() => fb.auth().signOut()}>Sign Out</button>
-    </>
+    <div className={classes.centered}>
+      <Typography variant="h1" component="h2">
+        👋 Welcome to Homepage
+      </Typography>
+    </div>
   );
 }

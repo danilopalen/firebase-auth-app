@@ -17,8 +17,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://www.danilopalen.info/">
+        Danilo Palen
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -30,21 +30,9 @@ export default function SignIn() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passError, setPassError] = useState("");
   const history = useHistory();
-
-  function login(e: string, pass: string) {
-    fb.auth().signInWithEmailAndPassword(e, pass);
-  }
-
-  function handleSubmit(e: any) {
-    e.preventDefault();
-    try {
-      login(email, password);
-      history.push("/");
-    } catch (error) {
-      alert(error);
-    }
-  }
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -71,6 +59,8 @@ export default function SignIn() {
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              helperText={emailError}
+              error={emailError ? true : false}
             />
             <TextField
               variant="outlined"
@@ -84,6 +74,8 @@ export default function SignIn() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              helperText={passError}
+              error={passError ? true : false}
             />
             <Button
               type="submit"
@@ -91,7 +83,24 @@ export default function SignIn() {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={(e) => handleSubmit(e)}
+              onClick={(e) => {
+                e.preventDefault();
+                fb.auth()
+                  .signInWithEmailAndPassword(email, password)
+                  .then(() => history.push("/"))
+                  .catch((error) => {
+                    switch (error.code) {
+                      case "auth/invalid-email":
+                      case "auth/user-disabled":
+                      case "auth/user-not-found":
+                        setEmailError(error.message);
+                        break;
+                      case "auth/wrong-password":
+                        setPassError(error.message);
+                        break;
+                    }
+                  });
+              }}
             >
               Sign In
             </Button>

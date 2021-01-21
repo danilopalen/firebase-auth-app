@@ -17,8 +17,8 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://www.danilopalen.info/">
+        Danilo Palen
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -30,6 +30,8 @@ export default function SignUp() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passError, setPassError] = useState("");
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -56,6 +58,8 @@ export default function SignUp() {
               autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              helperText={emailError}
+              error={emailError ? true : false}
             />
             <TextField
               variant="outlined"
@@ -69,6 +73,8 @@ export default function SignUp() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              helperText={passError}
+              error={passError ? true : false}
             />
             <Button
               type="submit"
@@ -81,7 +87,15 @@ export default function SignUp() {
                 fb.auth()
                   .createUserWithEmailAndPassword(email, password)
                   .catch((error) => {
-                    alert(error);
+                    switch (error.code) {
+                      case "auth/email-already-in-use":
+                      case "auth/invalid-email":
+                        setEmailError(error.message);
+                        break;
+                      case "auth/weak-password":
+                        setPassError(error.message);
+                        break;
+                    }
                     // ..
                   });
               }}
