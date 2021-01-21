@@ -1,16 +1,28 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
-import firebase from "firebase";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { AppBar, Button, Toolbar, Typography } from "@material-ui/core";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
+import { useStyles } from "./styles";
+import Home from "./components/Home";
+import fb from "./firebase";
+import firebase from "firebase";
 
 function App() {
+  const classes = useStyles();
   const [user, setUser] = useState<firebase.User | null>(null);
 
-  console.log("user", user);
+  useEffect(() => {
+    fb.auth().onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+  }, []);
+
   return (
     <Router>
       <div>
@@ -20,23 +32,13 @@ function App() {
               <Typography variant="h6" style={{ flexGrow: 1 }}>
                 Firebase Authentication
               </Typography>
-              <Button>
-                <Link
-                  to="/SignUp"
-                  style={{
-                    textDecoration: "none",
-                    color: "#fff",
-                    marginRight: "10px",
-                  }}
-                >
+              <Button style={{ marginRight: "10px" }}>
+                <Link to="/SignUp" className={classes.navLink}>
                   Sign Up
                 </Link>
               </Button>
               <Button>
-                <Link
-                  to="/SignIn"
-                  style={{ textDecoration: "none", color: "#fff" }}
-                >
+                <Link to="/SignIn" className={classes.navLink}>
                   Sign In
                 </Link>
               </Button>
@@ -45,20 +47,11 @@ function App() {
         </div>
 
         <Switch>
-          <Route path="/SignUp">
-            <SignUp
-              setUser={(user) => {
-                setUser(user);
-              }}
-            />
+          <Route exact path="/">
+            {user ? <Home /> : <SignIn />}
           </Route>
-          <Route path="/SignIn">
-            <SignIn
-              setUser={(user) => {
-                setUser(user);
-              }}
-            />
-          </Route>
+          <Route path="/SignUp" component={SignUp} />
+          <Route path="/SignIn" component={SignIn} />
         </Switch>
       </div>
     </Router>
