@@ -30,8 +30,10 @@ export default function SignUp() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passError, setPassError] = useState("");
+  const [passConfirmationError, setPassConfirmationError] = useState("");
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -57,7 +59,10 @@ export default function SignUp() {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmailError("");
+                setEmail(e.target.value);
+              }}
               helperText={emailError}
               error={emailError ? true : false}
             />
@@ -72,11 +77,37 @@ export default function SignUp() {
               id="password"
               autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassError("");
+                setPassword(e.target.value);
+              }}
               helperText={passError}
               error={passError ? true : false}
             />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              label="Confirm Password"
+              type="password"
+              autoComplete="current-password"
+              value={passwordConfirmation}
+              onChange={(e) => {
+                if (e.target.value !== password) {
+                  setPassConfirmationError("Password did not match");
+                } else {
+                  setPassConfirmationError("");
+                }
+                setPasswordConfirmation(e.target.value);
+              }}
+              helperText={passConfirmationError}
+              error={passConfirmationError ? true : false}
+            />
             <Button
+              disabled={
+                !email || !passwordConfirmation || !password ? true : false
+              }
               type="submit"
               fullWidth
               variant="contained"

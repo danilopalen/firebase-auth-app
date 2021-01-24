@@ -58,7 +58,10 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmailError("");
+                setEmail(e.target.value);
+              }}
               helperText={emailError}
               error={emailError ? true : false}
             />
@@ -73,11 +76,15 @@ export default function SignIn() {
               id="password"
               autoComplete="current-password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassError("");
+                setPassword(e.target.value);
+              }}
               helperText={passError}
               error={passError ? true : false}
             />
             <Button
+              disabled={!email || !password ? true : false}
               type="submit"
               fullWidth
               variant="contained"
