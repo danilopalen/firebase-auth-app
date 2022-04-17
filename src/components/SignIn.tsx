@@ -17,7 +17,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://www.danilopalen.info/">
+      <Link color="inherit" href="https://danilopalen.netlify.app/">
         Danilo Palen
       </Link>{" "}
       {new Date().getFullYear()}
